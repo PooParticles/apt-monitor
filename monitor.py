@@ -35,7 +35,11 @@ HEADERS = {
 def fetch(url):
     """Fetch a URL. Returns BeautifulSoup or None on failure."""
     try:
-        r = requests.get(url, headers=HEADERS, timeout=15)
+        # Use verify=False specifically for 1914 Main to bypass the SSL error
+        should_verify = False if "1914main.com" in url else True
+        
+        r = requests.get(url, headers=HEADERS, timeout=15, verify=should_verify)
+        
         if r.status_code == 200:
             return BeautifulSoup(r.text, "html.parser")
         else:
